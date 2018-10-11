@@ -17,12 +17,12 @@ final class Store {
 			let data = try? Data(contentsOf: u.appendingPathComponent(.storeLocation)),
 			let folder = try? JSONDecoder().decode(Folder.self, from: data)
 		{
-			self.rootFolder = folder
+			rootFolder = folder
 		} else {
-			self.rootFolder = Folder(name: "", uuid: UUID())
+			rootFolder = Folder(name: "", uuid: UUID())
 		}
 		
-		self.rootFolder.store = self
+		rootFolder.store = self
 	}
 	
 	func fileURL(for recording: Recording) -> URL? {

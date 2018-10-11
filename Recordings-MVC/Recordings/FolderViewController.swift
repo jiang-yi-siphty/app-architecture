@@ -1,6 +1,7 @@
 import UIKit
 
 class FolderViewController: UITableViewController {
+	
 	var folder: Folder = Store.shared.rootFolder {
 		didSet {
 			tableView.reloadData()
@@ -87,8 +88,7 @@ class FolderViewController: UITableViewController {
 				let selectedFolder = selectedItem as? Folder
 			else { fatalError() }
 			folderVC.folder = selectedFolder
-		}
-		else if identifier == .showRecorder {
+		} else if identifier == .showRecorder {
 			guard let recordVC = segue.destination as? RecordViewController else { fatalError() }
 			recordVC.folder = folder
 		} else if identifier == .showPlayer {
@@ -125,9 +125,26 @@ class FolderViewController: UITableViewController {
 		return true
 	}
 	
-	override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-		folder.remove(folder.contents[indexPath.row])
+	override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle , forRowAt indexPath: IndexPath) {
+		if editingStyle == .delete {
+			folder.remove(folder.contents[indexPath.row])
+		} else {
+			print("Editing style: \(editingStyle.rawValue)")
+		}
 	}
+	
+//	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+//		let moreRowAction = UITableViewRowAction(style: UITableViewRowAction.Style.default, title: "More", handler:{action, indexpath in
+//			print("MORE•ACTION");
+//		});
+//		moreRowAction.backgroundColor = #colorLiteral(red: 0.3084011078, green: 0.5618229508, blue: 0, alpha: 1);
+//
+//		let deleteRowAction = UITableViewRowAction(style: UITableViewRowAction.Style.default, title: "Delete", handler:{action, indexpath in
+//			print("DELETE•ACTION");
+//		});
+//
+//		return [deleteRowAction, moreRowAction];
+//	}
 	
 	// MARK: UIStateRestoring
 	
@@ -138,13 +155,21 @@ class FolderViewController: UITableViewController {
 	
 	override func decodeRestorableState(with coder: NSCoder) {
 		super.decodeRestorableState(with: coder)
-		if let uuidPath = coder.decodeObject(forKey: .uuidPathKey) as? [UUID], let folder = Store.shared.item(atUUIDPath: uuidPath) as? Folder {
+		if let uuidPath = coder.decodeObject(forKey: stringName.uuidPath.rawValue) as? [UUID],
+			let folder = Store.shared.item(atUUIDPath: uuidPath) as? Folder
+		{
 			self.folder = folder
 		} else {
-			if let index = navigationController?.viewControllers.index(of: self), index != 0 {
+			if let index = navigationController?.viewControllers.index(of: self),
+				index != 0
+			{
 				navigationController?.viewControllers.remove(at: index)
 			}
 		}
+	}
+	enum stringName: String {
+		case uuidPath
+		case type
 	}
 }
 
