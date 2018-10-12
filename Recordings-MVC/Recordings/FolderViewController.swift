@@ -82,24 +82,27 @@ class FolderViewController: UITableViewController {
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		guard let identifier = segue.identifier else { return }
-		if identifier == .showFolder {
+		switch identifier {
+		case .showFolder :
 			guard
 				let folderVC = segue.destination as? FolderViewController,
 				let selectedFolder = selectedItem as? Folder
-			else { fatalError() }
+				else { fatalError() }
 			folderVC.folder = selectedFolder
-		} else if identifier == .showRecorder {
+		case .showRecorder :
 			guard let recordVC = segue.destination as? RecordViewController else { fatalError() }
 			recordVC.folder = folder
-		} else if identifier == .showPlayer {
+		case .showPlayer :
 			guard
-			let playVC = (segue.destination as? UINavigationController)?.topViewController as? PlayViewController,
-			let recording = selectedItem as? Recording
-			else { fatalError() }
+				let playVC = (segue.destination as? UINavigationController)?.topViewController as? PlayViewController,
+				let recording = selectedItem as? Recording
+				else { fatalError() }
 			playVC.recording = recording
 			if let indexPath = tableView.indexPathForSelectedRow {
 				tableView.deselectRow(at: indexPath, animated: true)
 			}
+		default:
+			break
 		}
 	}
 	
@@ -132,19 +135,6 @@ class FolderViewController: UITableViewController {
 			print("Editing style: \(editingStyle.rawValue)")
 		}
 	}
-	
-//	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-//		let moreRowAction = UITableViewRowAction(style: UITableViewRowAction.Style.default, title: "More", handler:{action, indexpath in
-//			print("MORE•ACTION");
-//		});
-//		moreRowAction.backgroundColor = #colorLiteral(red: 0.3084011078, green: 0.5618229508, blue: 0, alpha: 1);
-//
-//		let deleteRowAction = UITableViewRowAction(style: UITableViewRowAction.Style.default, title: "Delete", handler:{action, indexpath in
-//			print("DELETE•ACTION");
-//		});
-//
-//		return [deleteRowAction, moreRowAction];
-//	}
 	
 	// MARK: UIStateRestoring
 	

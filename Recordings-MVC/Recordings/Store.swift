@@ -10,8 +10,8 @@ final class Store {
 	private(set) var rootFolder: Folder
 	
 	init(url: URL?) {
-		self.baseURL = url
-		self.placeholder = nil
+		baseURL = url
+		placeholder = nil
 		
 		if let u = url,
 			let data = try? Data(contentsOf: u.appendingPathComponent(.storeLocation)),

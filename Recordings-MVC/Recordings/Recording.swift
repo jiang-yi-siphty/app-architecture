@@ -1,20 +1,22 @@
 import Foundation
 
 class Recording: Item, Codable {
-	override init(name: String, uuid: UUID) {
-		super.init(name: name, uuid: uuid)
-	}
 	
 	var fileURL: URL? {
 		return store?.fileURL(for: self)
 	}
+	
+	enum RecordingKeys: CodingKey { case name, uuid }
+	
+	override init(name: String, uuid: UUID) {
+		super.init(name: name, uuid: uuid)
+	}
+	
 	override func deleted() {
 		store?.removeFile(for: self)
 		super.deleted()
 	}
 
-	enum RecordingKeys: CodingKey { case name, uuid }
-	
 	required init(from decoder: Decoder) throws {
 		let c = try decoder.container(keyedBy: RecordingKeys.self)
 		let uuid = try c.decode(UUID.self, forKey: .uuid)
