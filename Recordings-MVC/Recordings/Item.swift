@@ -15,6 +15,15 @@ class Item {
 		self.uuid = uuid
 		self.store = nil
 	}
+	
+	func deleted() {
+		parent = nil
+	}
+	
+	func item(atUUIDPath path: ArraySlice<UUID>) -> Item? {
+		guard let first = path.first, first == uuid else { return nil }
+		return self
+	}
 }
 
 extension Item {
@@ -26,19 +35,10 @@ extension Item {
 		}
 	}
 	
-	func deleted() {
-		parent = nil
-	}
-	
 	var uuidPath: [UUID] {
 		var path = parent?.uuidPath ?? []
 		path.append(uuid)
 		return path
-	}
-	
-	func item(atUUIDPath path: ArraySlice<UUID>) -> Item? {
-		guard let first = path.first, first == uuid else { return nil }
-		return self
 	}
 }
 
