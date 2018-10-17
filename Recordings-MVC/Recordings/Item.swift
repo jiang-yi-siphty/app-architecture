@@ -15,7 +15,9 @@ class Item {
 		self.uuid = uuid
 		self.store = nil
 	}
-	
+}
+
+extension Item {
 	func setName(_ newName: String) {
 		name = newName
 		if let p = parent {
